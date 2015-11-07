@@ -23,9 +23,28 @@ if ( @ARGV > 0 ) {
 }
 
 my @lines = split /\n/, $ARGV[0];
+my $first = 1;
+my $infile = 0;
+my $cur_file = "";
 
 foreach my $line (@lines) {
-	
+	if ($first) {
+		$first =0;
+		unless ($line =~ m/^diff/) {
+			print "No patch file\n";
+			exit 1;
+		}
+	}
+	/*find file name*/
+	$cur_file .= ".patch";
+	open(FW,">>./"$cur_file);
+	print FW $line;
+	while $line (@lines) {
+		unless ($line =! m/^diff/) {
+			print FW $line;	
+		}
+	}
+	close FW;
 }
 
 exit 0;
