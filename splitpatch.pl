@@ -52,6 +52,9 @@ foreach my $line (@lines) {
 		}
 	}
 	/*find file name*/
+  my $first_line = split / /, $line;
+  my @path = split /\//, $first_line[2];
+  $cur_file = join '_', @path(1,($#path));
 	$cur_file .= ".patch";
 	open(FW,">>./"$cur_file);
 	print FW $line;
