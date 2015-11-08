@@ -33,6 +33,11 @@ if ($help) {
 	print_usage();
 }
 
+if ($split) {
+  print("Splitting in hunks not yet implemented\n");
+  exit 0;
+}
+
 my @lines = split /\n/, $ARGV[0];
 my $first = 1;
 my $infile = 0;
