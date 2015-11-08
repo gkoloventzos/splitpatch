@@ -6,7 +6,7 @@ use File::Basename;
 use Getopt::Long;
 
 my $help = 0;
-my $file = "";
+my @file = "";
 my $split = 0;
 my $verbose = 0;
 
