@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use File::Basename;
+use FileHandle;
 use Getopt::Long;
 
 my $help = 0;
@@ -18,7 +19,8 @@ sub print_usage(){
 	exit 0;
 }
 
-if ($#ARGV == 0) {
+if ($#ARGV == -1) {
+	print "here\n\n\n";
 	print_usage();
 }
 
@@ -38,31 +40,33 @@ if ($split) {
   exit 0;
 }
 
+open( my $fh, '<', $ARGV[0]) or die "Can't open $ARGV[0]: $!";
 my @lines = split /\n/, $ARGV[0];
 my $first = 1;
 my $infile = 0;
 my $cur_file = "";
+my $FW = FileHandle->new;;
 
-foreach my $line (@lines) {
-	if ($first) {
-		$first =0;
-		unless ($line =~ m/^diff/) {
-			print "No patch file\n";
-			exit 1;
-		}
-	}
-  my @first_line = split / /, $line;
-  my @path = split /\//, $first_line[2];
-  $cur_file = join('_', @path[1..($#path)]);
-	$cur_file .= ".patch";
-  open(FW,">>",$cur_file);
-	print FW $line;
-	foreach $line (@lines) {
-		unless ($line =! m/^diff/) {
-			print FW $line;
-		}
-	}
-	close FW;
+while (my $line = <$fh>) {
+  if ($first) {
+    $first =0;
+    unless ($line =~ m/^diff/) {
+      print "No patch file\n";
+      exit 1;
+    }
+  }
+  if ($line =~ m/^diff/) {
+    if ($FW->opened()) {
+      close $FW; 
+    }
+    my @first_line = split / /, $line;
+    my @path = split /\//, $first_line[2];
+    $cur_file = join('_', @path[1..($#path)]);
+    $cur_file .= ".patch";
+    print "$cur_file\n";
+    open(FW,">>",$cur_file);
+  }
+  print FW $line;
 }
 
 exit 0;
