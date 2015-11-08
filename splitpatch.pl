@@ -51,7 +51,6 @@ foreach my $line (@lines) {
 			exit 1;
 		}
 	}
-	/*find file name*/
   my $first_line = split / /, $line;
   my @path = split /\//, $first_line[2];
   $cur_file = join '_', @path(1,($#path));
