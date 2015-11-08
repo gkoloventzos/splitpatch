@@ -51,15 +51,15 @@ foreach my $line (@lines) {
 			exit 1;
 		}
 	}
-  my $first_line = split / /, $line;
+  my @first_line = split / /, $line;
   my @path = split /\//, $first_line[2];
-  $cur_file = join '_', @path(1,($#path));
+  $cur_file = join('_', @path[1..($#path)]);
 	$cur_file .= ".patch";
-	open(FW,">>./"$cur_file);
+  open(FW,">>",$cur_file);
 	print FW $line;
-	while $line (@lines) {
+	foreach $line (@lines) {
 		unless ($line =! m/^diff/) {
-			print FW $line;	
+			print FW $line;
 		}
 	}
 	close FW;
