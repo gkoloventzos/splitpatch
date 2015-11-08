@@ -7,19 +7,30 @@ use Getopt::Long;
 
 my $help = 0;
 my $file = "";
+my $split = 0;
 my $verbose = 0;
 
-if ($#ARGV == 0 and ($ARGV[0] =~ m/-h/)) {
+sub print_usage(){
 	print "Usage: splitpatch.pl patch_file\n";
 	print "-file|f <list of files>   list of files you want to create patches\n";
+	print "-split|s 		 split into hunks\n";
 	print "-help|?			 print this message\n";
 	exit 0;
+}
+
+if ($#ARGV == 0) {
+	print_usage();
 }
 
 if ( @ARGV > 0 ) {
 	    GetOptions('verbose'	=> \$verbose,
 		       'help|?'	=> \$help,
+		       "split"  =>\$split,
 		       "file=s" => \@file,);
+}
+
+if ($help) {
+	print_usage();
 }
 
 my @lines = split /\n/, $ARGV[0];
